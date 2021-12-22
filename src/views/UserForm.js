@@ -1,35 +1,61 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const UserForm = (props) => {
+const UserForm = ({route, navigation}) => {
+
+  const [user, setUser] = useState(route.params ? route.params : {})
   return (
-    <View>
-      <Text style={styles.boldText}>UserForm</Text>
+    <View style={style.form}>
+      <Text style={{color: '#333', fontWeight: 'bold'}}>Nome</Text>
+      <TextInput 
+        style={style.input}
+        onChangeText={name => setUser({...user, name})}
+        placeholder='Informe o nome do usuário'
+        value={user.name}
+        placeholderTextColor="#666" 
+        />
+      <Text style={{color: '#333', fontWeight: 'bold'}}>Email</Text>
+      <TextInput 
+        style={style.input}
+        onChangeText={email => setUser({...user, email})}
+        placeholder='Informe o email do usuário'
+        value={user.email}
+        placeholderTextColor="#666" 
+        />
+       <Text style={{color: '#333', fontWeight: 'bold'}}>Avatar</Text>
+      <TextInput 
+        style={style.input}
+        onChangeText={avatarUrl => setUser({...user, avatarUrl})}
+        placeholder='Informe a avatarUrl do usuário'
+        value={user.avatarUrl}
+        placeholderTextColor="#666" 
+        />
+
+        <Button 
+          title='Salvar'
+          color='#a9cf48'
+          onPress={() => {
+            navigation.goBack()
+          }}
+        />
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  principal: {
-    backgroundColor: '#333',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+const style = StyleSheet.create({
+  form: {
+    padding: '5%',
   },
-  boldText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    padding: 10
-  },
-  postContainer: {
-    width: '80%',
-    backgroundColor: Colors.white,
-    padding: 8,
-    alignItems: 'center',
-    margin: 10
+  input: {
+    height: 40,
+    borderColor: 'grey',
+    borderWidth: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    color: '#111',
+    borderRadius: 5,
   }
-});
+})
 
 export default UserForm;
