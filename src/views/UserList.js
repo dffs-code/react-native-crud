@@ -1,10 +1,30 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Alert, } from 'react-native';
+import React, { useContext } from 'react';
+import { View, StyleSheet, FlatList, Alert, } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import users from '../data/users';
-import { ListItem, Avatar, Button, ButtonGroup, Icon } from 'react-native-elements';
+import { ListItem, Avatar, Button, Icon } from 'react-native-elements';
+import UsersContext from '../contexts/UsersContext';
 
 const UserList = (props) => {
+
+  const { state, dispatch } = useContext(UsersContext);
+
+  function showDeleteAlert(item){
+    return (
+      Alert.alert('Excluir usuário', `Você deseja excluir o usuário: ${item.name} ?`, [
+        {
+          text: 'Sim',
+          onPress(){
+            dispatch({
+              type: 'deleteUser',
+              payload: item,
+            })
+          }
+        },{
+          text: 'Não',
+        }
+      ])
+    )
+  }
 
   function getUserItem( { item }) {
     return (
@@ -19,29 +39,17 @@ const UserList = (props) => {
             {item.email}
           </ListItem.Subtitle>
         </ListItem.Content>
-        <ListItem.Content right={true}>
-          <>
           <Button
             onPress={() => props.navigation.navigate('UserForm', item)}
             type='clear'
-            icon={<Icon name='edit' size={20} color='#333' />}
+            icon={<Icon name='edit' size={20} color='#85ab23' />}
             />
+          
           <Button
-            onPress={() => {
-              Alert.alert('Excluir usuário', `Você deseja excluir o usuário: ${item.name} ?`, [
-                {
-                  text: 'Não',
-                }, {
-                  text: 'Sim',
-                  onPress(){console.warn(`Usuário ${item.name} Deletado`)}
-                }
-              ])
-            }}
+            onPress={()=>showDeleteAlert(item)}
             type='clear'
-            icon={<Icon name='delete' size={20} color='#333' />}
+            icon={<Icon name='delete' size={20} color='#F35353' />}
             />
-          </>
-        </ListItem.Content>
       </ListItem>
       )
     }
@@ -50,7 +58,7 @@ const UserList = (props) => {
     <View>
       <FlatList 
         keyExtractor={user => user.id.toString()}
-        data={users}
+        data={state.users}
         renderItem={getUserItem}
       />
     </View>

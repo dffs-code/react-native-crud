@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import UsersContext from '../contexts/UsersContext';
+
 
 const UserForm = ({route, navigation}) => {
+
+  const { dispatch } = useContext(UsersContext);
 
   const [user, setUser] = useState(route.params ? route.params : {})
   return (
@@ -36,6 +39,11 @@ const UserForm = ({route, navigation}) => {
           title='Salvar'
           color='#a9cf48'
           onPress={() => {
+            dispatch({
+              type: user.id ? 'updateUser' : 'createUser',
+              payload: user,
+            })
+
             navigation.goBack()
           }}
         />
